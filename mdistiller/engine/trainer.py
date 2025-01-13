@@ -154,7 +154,8 @@ class BaseTrainer(object):
         train_start_time = time.time()
         image, target, index = data
         train_meters["data_time"].update(time.time() - train_start_time)
-        image = image.float()
+        
+        image = torch.cat([image[0], image[1]], dim=0).float()
         image = image.cuda(non_blocking=True)
         target = target.cuda(non_blocking=True)
         index = index.cuda(non_blocking=True)
@@ -168,8 +169,8 @@ class BaseTrainer(object):
         self.optimizer.step()
         train_meters["training_time"].update(time.time() - train_start_time)
         # collect info
-        batch_size = image.size(0)
-        acc1, acc5 = accuracy(preds, target, topk=(1, 5))
+        batch_size = target.size(0)
+        acc1, acc5 = accuracy(preds[:batch_size,:], target, topk=(1, 5))
         train_meters["losses"].update(loss.cpu().detach().numpy().mean(), batch_size)
         train_meters["top1"].update(acc1[0], batch_size)
         train_meters["top5"].update(acc5[0], batch_size)

@@ -6,6 +6,10 @@ import torch.backends.cudnn as cudnn
 
 cudnn.benchmark = True
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+
 from mdistiller.models import cifar_model_dict, imagenet_model_dict
 from mdistiller.distillers import distiller_dict
 from mdistiller.dataset import get_dataset, get_dataset_strong

@@ -33,5 +33,5 @@ distiller_dict = {
     "VID": VID,
     "REVIEWKD": ReviewKD,
     "DKD": DKD,
-    "None_Supcon": SupCon,
+    "NONE_SupCon": SupCon,
 }
