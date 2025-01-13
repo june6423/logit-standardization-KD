@@ -14,6 +14,7 @@ from .Sonly import Sonly
 from .VID import VID
 from .ReviewKD import ReviewKD
 from .DKD import DKD
+from .SupCon import Vanilla as SupCon
 
 distiller_dict = {
     "NONE": Vanilla,
@@ -32,4 +33,5 @@ distiller_dict = {
     "VID": VID,
     "REVIEWKD": ReviewKD,
     "DKD": DKD,
+    "None_Supcon": SupCon,
 }

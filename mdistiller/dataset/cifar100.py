@@ -305,6 +305,15 @@ class RandAugment:
         return img
 
 
+class TwoCropTransform:
+    """Create two crops of the same image"""
+    def __init__(self, transform):
+        self.transform = transform
+
+    def __call__(self, x):
+        return [self.transform(x), self.transform(x)]
+
+
 def get_cifar100_train_transform():
     train_transform = transforms.Compose(
         [
@@ -358,6 +367,30 @@ def get_cifar100_dataloaders(batch_size, val_batch_size, num_workers):
     test_transform = get_cifar100_test_transform()
     train_set = CIFAR100Instance(
         root=data_folder, download=True, train=True, transform=train_transform
+    )
+    num_data = len(train_set)
+    test_set = datasets.CIFAR100(
+        root=data_folder, download=True, train=False, transform=test_transform
+    )
+
+    train_loader = DataLoader(
+        train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers
+    )
+    test_loader = DataLoader(
+        test_set,
+        batch_size=val_batch_size,
+        shuffle=False,
+        num_workers=1,
+    )
+    return train_loader, test_loader, num_data
+
+
+def get_cifar100_dataloaders_supcon(batch_size, val_batch_size, num_workers):
+    data_folder = get_data_folder()
+    train_transform = get_cifar100_train_transform()
+    test_transform = get_cifar100_test_transform()
+    train_set = CIFAR100Instance(
+        root=data_folder, download=True, train=True, transform=TwoCropTransform(train_transform)
     )
     num_data = len(train_set)
     test_set = datasets.CIFAR100(

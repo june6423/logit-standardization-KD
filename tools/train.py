@@ -6,8 +6,6 @@ import torch.backends.cudnn as cudnn
 
 cudnn.benchmark = True
 
-#UAP_KD
-
 from mdistiller.models import cifar_model_dict, imagenet_model_dict
 from mdistiller.distillers import distiller_dict
 from mdistiller.dataset import get_dataset, get_dataset_strong
@@ -44,7 +42,7 @@ def main(cfg, resume, opts):
     else:
         train_loader, val_loader, num_data, num_classes = get_dataset(cfg)
     # vanilla
-    if cfg.DISTILLER.TYPE == "NONE":
+    if "NONE" in cfg.DISTILLER.TYPE:
         if cfg.DATASET.TYPE == "imagenet":
             model_student = imagenet_model_dict[cfg.DISTILLER.STUDENT](pretrained=False)
         else:
@@ -77,8 +75,9 @@ def main(cfg, resume, opts):
                 model_student, model_teacher, cfg
             )
     distiller = torch.nn.DataParallel(distiller.cuda())
+    # distiller = torch.nn.DataParallel(distiller, device_ids =[0]) # for single GPU
 
-    if cfg.DISTILLER.TYPE != "NONE":
+    if not "NONE" in cfg.DISTILLER.TYPE:
         print(
             log_msg(
                 "Extra parameters of {}: {}\033[0m".format(

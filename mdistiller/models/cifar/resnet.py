@@ -120,7 +120,12 @@ class ResNet(nn.Module):
         self.layer2 = self._make_layer(block, num_filters[2], n, stride=2)
         self.layer3 = self._make_layer(block, num_filters[3], n, stride=2)
         self.avgpool = nn.AvgPool2d(8)
-        self.fc = nn.Linear(num_filters[3] * block.expansion, num_classes)
+        #self.fc = nn.Linear(num_filters[3] * block.expansion, num_classes)
+        
+        self.feature_dim = 128
+        self.fc1 = nn.Linear(num_filters[3] * block.expansion, self.feature_dim)
+        self.fc2 = nn.Linear(self.feature_dim, num_classes)
+        
         self.stage_channels = num_filters
 
         for m in self.modules():
@@ -196,7 +201,10 @@ class ResNet(nn.Module):
 
         x = self.avgpool(x)
         avg = x.reshape(x.size(0), -1)
-        out = self.fc(avg)
+        avg = self.fc1(avg)
+        avg = F.normalize(avg, dim=1)
+        
+        out = self.fc2(avg)
 
         feats = {}
         feats["feats"] = [f0, f1, f2, f3]
