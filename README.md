@@ -76,6 +76,13 @@ sudo python setup.py develop
 
 4. For CTKD
 
+5. For Supcon
+
+```bash
+# Train teacher model with Supcon
+python tools/train.py --cfg configs/cifar100/supcon.yaml
+```
+
 Please refer to [CTKD](./CTKD).
 
 #### Results and Logs
