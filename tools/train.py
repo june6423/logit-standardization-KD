@@ -6,6 +6,8 @@ import torch.backends.cudnn as cudnn
 
 cudnn.benchmark = True
 
+#UAP_KD
+
 from mdistiller.models import cifar_model_dict, imagenet_model_dict
 from mdistiller.distillers import distiller_dict
 from mdistiller.dataset import get_dataset, get_dataset_strong
